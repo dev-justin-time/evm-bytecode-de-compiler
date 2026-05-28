@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EVM Bytecode Decompiler</title>
+  <!-- Mermaid styles -->
+  <link rel="stylesheet" href="mermaid.css">
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <h1>EVM Bytecode Decompiler</h1>
+    <div class="decompiler">
+      <div class="panel">
+        <h3>Input Bytecode</h3>
+        <textarea id="bytecode" placeholder="Enter EVM bytecode here (hex format)..."></textarea>
+      </div>
+      <div class="panel">
+        <h3>Contract Address</h3>
+        <input id="contractAddress" type="text" placeholder="Enter contract address...">
+        <div style="height:8px"></div>
+        <button id="getContractBytecode">Get Bytecode</button>
+        <div style="height:8px"></div>
+        <button id="connectWalletBtn">Connect Wallet</button>
+      </div>
+      <div class="panel">
+        <h3>Decompiled Output</h3>
+        <textarea id="output" readonly></textarea>
+      </div>
+      <div class="controls">
+        <button id="decompileBtn">Decompile</button>
+        <button id="clearBtn">Clear</button>
+      </div>
+      <div class="workflow-panel">
+        <div class="mermaid-container panel">
+          <div id="mermaid" class="mermaid">
+            %%{init: {"theme":"neutral","flowchart": {"curve":"basis"}}}%%
+            flowchart LR
+              A[User Calls Contract] --> B{Entry Point / Fallback}
+              B -->|Function Call| C[Read Storage]
+              B -->|Fallback Call| D[Read Storage]
+              C --> E{Checks / Auth}
+              D --> E
+              E -->|pass| F[State Update (SSTORE)]
+              E -->|fail| G[Revert / Return]
+              F --> H[External CALL]
+              H --> I[Emit Event / Return]
+              G --> I
+          </div>
+        </div>
+        <div class="mermaid-controls panel" aria-hidden="false">
+          <div class="stage" id="stage-1">1. Call Received <button class="small" data-stage="1">►</button></div>
+          <div class="stage" id="stage-2">2. Entry Point Validated <button class="small" data-stage="2">►</button></div>
+          <div class="stage" id="stage-3">3. Read Storage <button class="small" data-stage="3">►</button></div>
+          <div class="stage" id="stage-4">4. Checks / Auth <button class="small" data-stage="4">►</button></div>
+          <div class="stage" id="stage-5">5. State Update (SSTORE) <button class="small" data-stage="5">►</button></div>
+          <div class="stage" id="stage-6">6. External CALL <button class="small" data-stage="6">►</button></div>
+          <div class="stage" id="stage-7">7. Emit Event / Return <button class="small" data-stage="7">►</button></div>
+          <div style="margin-top:auto; font-size:12px; color:var(--muted)">Use the stage buttons to animate workflow highlights.</div>
+        </div>
+      </div>
+      <div class="workflow-info">
+        <div class="panel" id="analysis"></div>
+        <div class="panel" id="contractInfo"></div>
+      </div>
+      <div class="panel" id="walletInfo"></div>
+      <div class="panel blockchainFeatures">
+        <h3>Blockchain Features</h3>
+        <ul style="padding-left:18px; margin:0">
+          <li><input type="checkbox" id="featureTokenBurning"> Token Burning</li>
+          <li><input type="checkbox" id="featureTokenStaking"> Token Staking</li>
+          <li><input type="checkbox" id="featureNFTSupport"> NFT Support</li>
+          <li><input type="checkbox" id="featureMultiSigWallets"> Multi-Signature Wallets</li>
+          <li><input type="checkbox" id="featureYieldFarming"> Yield Farming</li>
+        </ul>
+      </div>
+      <div class="panel pentest" id="pentestSuite">
+        <h3 style="margin-top:0; color:#ffd580">Pentest Contract Suite</h3>
+        <div>
+          <button class="btn" id="simulateReentrancy">Simulate Reentrancy</button>
+          <button class="btn" id="simulateOverflow">Simulate Integer Overflow</button>
+          <button class="btn" id="simulateFrontRun">Simulate Front-running</button>
+          <button class="btn" id="simulateAccessBypass">Simulate Access Control Bypass</button>
+          <button class="btn" id="simulateTxOrdering">Simulate Tx-Ordering (Nonce/MEV)</button>
+        </div>
+        <div id="pentestResults" class="result" style="margin-top:10px; background:#0f1220; padding:10px; border-radius:6px; color:var(--muted)">No tests run yet.</div>
+      </div>
+    </div>
+  </div>
+  <!-- Mermaid module script -->
+  <script type="module" src="mermaid.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/web3/dist/web3.min.js"></script>
+  <!-- Decompiler logic -->
+  <script src="decompiler.js"></script>
+  <!-- Pentest logic -->
+  <script src="pentest.js"></script>
+</body>
+</html>
