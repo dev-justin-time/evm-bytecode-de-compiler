@@ -1,0 +1,30 @@
+.highlight {
+  background-color: #7aa2f7;
+  color: #16161a;
+}
+:root {
+  --bg: #16161a;
+    --panel: #1f2330;
+    --muted: #9aa7d1;
+    --accent: #7aa2f7;
+    --success: #9ece6a;
+    --danger: #ff7b7b;
+    --glass: rgba(255,255,255,0.02);
+}
+.mermaid {
+  background: var(--panel);
+  border: 1px solid rgba(122,162,247,0.06);
+  padding: 14px;
+  border-radius: 8px;
+}
+.mermaid .highlight {
+  background-color: var(--success);
+  color: var(--bg);
+  border: 2px solid var(--accent);
+}
+
+.mermaid .danger {
+  background-color: var(--danger);
+  color: var(--bg);
+  border: 2px solid var(--accent);
+}
